@@ -4,95 +4,60 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Estimate Time Varying Reproduction Numbers from Epidemic Curves • EpiEstim</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Estimate Time Varying Reproduction Numbers from Epidemic Curves">
+<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Estimate Time Varying Reproduction Numbers from Epidemic Curves">
+<meta name="description" content="Tools to quantify transmissibility throughout an epidemic from the analysis of time series of incidence as described in Cori et al. (2013) &lt;doi:10.1093/aje/kwt133&gt; and Wallinga and Teunis (2004) &lt;doi:10.1093/aje/kwh255&gt;.">
 <meta property="og:description" content="Tools to quantify transmissibility throughout an epidemic from the analysis of time series of incidence as described in Cori et al. (2013) &lt;doi:10.1093/aje/kwt133&gt; and Wallinga and Teunis (2004) &lt;doi:10.1093/aje/kwh255&gt;.">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">EpiEstim</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
+    <a class="navbar-brand me-2" href="index.html">EpiEstim</a>
 
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="articles/alternative_software.html">Alternative software for estimating the reproduction number</a>
-    </li>
-    <li>
-      <a href="articles/EpiEstim_aggregated_data.html">EpiEstim for aggregated incidence data</a>
-    </li>
-    <li>
-      <a href="articles/EpiEstim_backimputation.html">Dealing with missed generations of infections with EpiEstim</a>
-    </li>
-    <li>
-      <a href="articles/full_EpiEstim_vignette.html">EpiEstim Vignette</a>
-    </li>
-    <li>
-      <a href="articles/MV_EpiEstim_vignette.html">MV-EpiEstim</a>
-    </li>
-    <li>
-      <a href="articles/short_demo.html">EpiEstim: a demonstration</a>
-    </li>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/alternative_software.html">Alternative software for estimating the reproduction number</a></li>
+    <li><a class="dropdown-item" href="articles/EpiEstim_aggregated_data.html">EpiEstim for aggregated incidence data</a></li>
+    <li><a class="dropdown-item" href="articles/EpiEstim_backimputation.html">Dealing with missed generations of infections with EpiEstim</a></li>
+    <li><a class="dropdown-item" href="articles/full_EpiEstim_vignette.html">Full EpiEstim vignette</a></li>
+    <li><a class="dropdown-item" href="articles/MV_EpiEstim_vignette.html">Multivariant EpiEstim</a></li>
+    <li><a class="dropdown-item" href="articles/short_demo.html">EpiEstim demonstration</a></li>
   </ul>
 </li>
-<li>
-  <a href="news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/mrc-ide/EpiEstim/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/mrc-ide/EpiEstim/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
-
-
-
-      </header><div class="row">
-  <div class="contents col-md-9">
-<div class="section level1">
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="epiestim">EpiEstim<a class="anchor" aria-label="anchor" href="#epiestim"></a>
 </h1></div>
 <!-- badges: start -->
@@ -100,46 +65,72 @@
 <p>EpiEstim is a tool to estimate the time-varying instantaneous reproduction number during epidemics. To install the latest version, use:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'EpiEstim'</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://mrc-ide.r-universe.dev'</span>, <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="functionalities">Functionalities<a class="anchor" aria-label="anchor" href="#functionalities"></a>
+</h2>
+<p>EpiEstim offers multiple functionalities around reproduction number estimation, which are summarised below.</p>
 <div class="section level3">
-<h3 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
+<h3 id="instantaneous-reproduction-number-estimation-estimate_r">Instantaneous reproduction number estimation: <code>estimate_R()</code>
+<a class="anchor" aria-label="anchor" href="#instantaneous-reproduction-number-estimation-estimate_r"></a>
 </h3>
-<p>Please see <a href="https://mrc-ide.github.io/EpiEstim/" class="external-link uri">https://mrc-ide.github.io/EpiEstim/</a> for vignettes with worked examples, FAQs and details about how EpiEstim can be used alongside some other R packages in an outbreak analysis workflow.</p>
+<p>The function <a href="https://mrc-ide.github.io/EpiEstim/reference/estimate_R.html"><code>estimate_R</code></a> estimates the time-varying case instantaneous reproduction number using the methodology described in Cori et al. AJE 2013.</p>
+<p>Among other features, this supports the following:</p>
+<ul>
+<li><p>Within the R estimation, nesting an estimation of the serial interval from double censored data using the <code>coarseDataTools</code> package, as described in Thompson et al. Epidemics 2019 (EpiEstim versions &gt;= 1.1-0, using <code>method = "si_from_data"</code> or <code>method = "si_from_sample"</code>)</p></li>
+<li><p>Allowing user-specified incidence split between imported and local cases, as described in Thompson et al. Epidemics 2019 (v &gt;= 1.1-0, by modifying the <code>incid</code> argument)</p></li>
+<li><p>Allowing input incidence aggregated at time steps longer than 1, as described in Nash et al. PLoS Comp Biol 2023 (v &gt;= 2.4, by modifying <code>incid</code> and specifying the <code>dt</code> argument)</p></li>
+<li><p>Enabling backcalculation of early incidence (before first observation) to improve early R estimation as described in Brizzi et al. CID 2022. (v &gt;= 2.5, with the <code>backimputation_window</code> argument)</p></li>
+</ul>
 </div>
 <div class="section level3">
-<h3 id="cite-our-papers">Cite our papers<a class="anchor" aria-label="anchor" href="#cite-our-papers"></a>
+<h3 id="estimation-of-the-transmission-advantage-of-pathogen-variants-estimate_advantage">Estimation of the transmission advantage of pathogen variants: <code>estimate_advantage()</code>
+<a class="anchor" aria-label="anchor" href="#estimation-of-the-transmission-advantage-of-pathogen-variants-estimate_advantage"></a>
 </h3>
-<p>Anne Cori, Neil M. Ferguson, Christophe Fraser, Simon Cauchemez, <a href="https://doi.org/10.1093/aje/kwt133" class="external-link">A New Framework and Software to Estimate Time-Varying Reproduction Numbers During Epidemics</a>, American Journal of Epidemiology, Volume 178, Issue 9, 1 November 2013, Pages 1505–1512.</p>
-<pre class="console"><code> @article{Cori2013,
- author={Cori, A and Ferguson, NM and Fraser, C and Cauchemez, S},
- year={2013},
- title={{A New Framework and Software to Estimate Time-Varying Reproduction Numbers During Epidemics}},
- journal={Am. J. Epidemiol.},
- doi={10.1093/aje/kwt133},
-}</code></pre>
+<p>The function <a href="https://mrc-ide.github.io/EpiEstim/reference/estimate_advantage.html"><code>estimate_advantage</code></a> jointly estimates the instantaneous reproduction number for a reference variant (or pathogen or strain) and the relative transmissibility of a “new” variant (or pathogen or strain), using the methodology described in Bhatia et al. Epidemics 2023.</p>
+</div>
+<div class="section level3">
+<h3 id="case-reproduction-number-estimation-wallinga_teunis">Case reproduction number estimation: <code>wallinga_teunis()</code>
+<a class="anchor" aria-label="anchor" href="#case-reproduction-number-estimation-wallinga_teunis"></a>
+</h3>
+<p>The function <a href="https://mrc-ide.github.io/EpiEstim/reference/wallinga_teunis.html"><code>wallinga_teunis</code></a> estimates the time-varying case reproduction number using the methodology described in Wallinga and Teunis et al. AJE 2004. Note that EpiEstim currently does not implement any additional features such as correcting for right censoring as proposed by Cauchemez et al. AJE 2006.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
+</h2>
+<p>Please see the <a href="https://mrc-ide.github.io/EpiEstim/">vignettes</a> on our documentation website for vignettes with worked examples, FAQs and details about how EpiEstim can be used alongside some other R packages in an outbreak analysis workflow.</p>
+</div>
+<div class="section level2">
+<h2 id="cite-our-papers">Cite our papers<a class="anchor" aria-label="anchor" href="#cite-our-papers"></a>
+</h2>
+<p>The methodology underlying EpiEstim is detailed in the following papers:</p>
+<p>Cori A, Ferguson NM, Fraser C, Cauchemez S, <a href="https://doi.org/10.1093/aje/kwt133" class="external-link">A New Framework and Software to Estimate Time-Varying Reproduction Numbers During Epidemics</a>, American Journal of Epidemiology, Volume 178, Issue 9, 1 November 2013, Pages 1505–1512.</p>
 <p>Thompson RN, Stockwin JE, van Gaalen RD, Polonsky JA, Kamvar ZN, Demarsh PA, et al. <a href="https://doi.org/10.1016/j.epidem.2019.100356" class="external-link">Improved inference of time-varying reproduction numbers during infectious disease outbreaks</a>, Epidemics, Volume 29, 1 December 2019, 100356.</p>
 <p>Nash RK, Nouvellet P, Cori A. <a href="https://doi.org/10.1371/journal.pdig.0000052" class="external-link">Real-time estimation of the epidemic reproduction number: Scoping review of the applications and challenges</a>, PLOS Digital Health, Volume 1, Issue 6, 27 June 2022, e0000052.</p>
 <p>Bhatia S, Wardle J, Nash RK, Nouvellet P, Cori A. <a href="https://doi.org/10.1016/j.epidem.2023.100692" class="external-link">Extending EpiEstim to estimate the transmission advantage of pathogen variants in real-time: SARS-CoV-2 as a case-study</a>, Epidemics, 21 June 2023, 100692.</p>
 <p>Nash RK, Cori A, Nouvellet P. <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011439" class="external-link">Estimating the epidemic reproduction number from temporally aggregated incidence data: a statistical modelling approach and software tool</a>, PLOS Computational Biology, Volume 19, Issue 8, 28 August 2023, e1011439.</p>
 <p>Brizzi A, O’Driscoll M, Dorigatti I., <a href="https://doi.org/10.1093/cid/ciac138" class="external-link">Refining Reproduction Number Estimates to Account for Unobserved Generations of Infection in Emerging Epidemics</a>, Clinical Infectious Diseases, Volume 75, Issue 1, 1 July 2022, Pages e114–e121.</p>
+<p>You can download a formatted bibtex file containing all our papers <a href="inst/epiestimpapers.bib">here</a>.</p>
 </div>
-<div class="section level3">
-<h3 id="citing-this-code-resource">Citing this code resource<a class="anchor" aria-label="anchor" href="#citing-this-code-resource"></a>
-</h3>
-<p>We kindly request that you cite this codebase as follows (BibTeX format):</p>
-<pre class="console"><code>@misc{Cori2022,
- author={Cori, A and Kamvar, ZN and Stockwin, J and Jombart, T and Dahlqwist, E and FitzJohn, R and Thompson, R and Nash, RK and Wardle, J and Bhatia, S},
- year={2022},
- title={{EpiEstim v2.2-4: A tool to estimate time varying instantaneous reproduction number during epidemics}},
- publisher={GitHub},
- journal={GitHub repository},
- howpublished = {\url{https://github.com/mrc-ide/EpiEstim}},
-}</code></pre>
+<div class="section level2">
+<h2 id="citing-this-code-resource">Citing this code resource<a class="anchor" aria-label="anchor" href="#citing-this-code-resource"></a>
+</h2>
+<p>We kindly request that you cite this codebase as follows:</p>
+<p>Cori A, Nash R, Jombart T, Kamvar Z, Stockwin J, Thompson R, Bhatia S, Brizzi A, Dahlqwist E, FitzJohn R, Gruson H, Wardle J, van Gaalen R, Pollington T, Monticone P, ter Hoeven E, Polonsky J, Li S, Lessler J, Demarsh P, Ferguson N, Fraser C, Cauchemez S (2026). <em>EpiEstim: Estimate Time Varying Reproduction Numbers from Epidemic Curves</em>. R package version 2.4, <a href="https://github.com/mrc-ide/EpiEstim" class="external-link uri">https://github.com/mrc-ide/EpiEstim</a>.</p>
+<p>BibTeX Format:</p>
+<pre class="console"><code>  @Manual{,
+    title = {EpiEstim: Estimate Time Varying Reproduction Numbers from Epidemic Curves},
+    author = {Anne Cori and Rebecca Nash and Thibaut Jombart and Zhian N. Kamvar and Jake Stockwin and Robin Thompson and Sangeeta Bhatia and Andrea Brizzi and Elisabeth Dahlqwist and Rich FitzJohn and Hugo Gruson and Jack Wardle and Rolina {van Gaalen} and Tim Pollington and Pietro Monticone and Ewout {ter Hoeven} and Jonathan A. Polonsky and Shikun Li and Justin Lessler and P. Alex Demarsh and Neil M. Ferguson and Christophe Fraser and Simon Cauchemez},
+    year = {2026},
+    note = {R package version 2.4},
+    url = {https://github.com/mrc-ide/EpiEstim},
+  }
+</code></pre>
+<p>You can also retrieve the above entry using</p>
+<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/cite.html" class="external-link">cite</a></span><span class="op">(</span><span class="st">"EpiEstim"</span><span class="op">)</span></span></code></pre>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="links">
+  </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=EpiEstim" class="external-link">View on CRAN</a></li>
@@ -155,6 +146,12 @@
 </ul>
 </div>
 
+<div class="community">
+<h2 data-toc-skip>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CONTRIBUTING.html">Contributing guide</a></li>
+</ul>
+</div>
 
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
@@ -166,7 +163,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Anne Cori <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8443-9162" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Anne Cori <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8443-9162" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -174,29 +171,26 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/mrc-ide/EpiEstim/actions" class="external-link"><img src="https://github.com/mrc-ide/EpiEstim/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/gh/annecori/EpiEstim?branch=master" class="external-link"><img src="https://codecov.io/gh/annecori/EpiEstim/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/mrc-ide/EpiEstim/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/mrc-ide/EpiEstim/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/mrc-ide/EpiEstim" class="external-link"><img src="https://codecov.io/gh/mrc-ide/EpiEstim/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://doi.org/10.5281/zenodo.3871387" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3871387.svg" alt="DOI"></a></li>
 </ul>
 </div>
 
-  </div>
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Anne Cori.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Anne Cori.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 
